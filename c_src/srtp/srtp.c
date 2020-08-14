@@ -90,8 +90,8 @@ static UnifexPayload *unifex_payload_clone_ex(UnifexEnv *env,
                                               UnifexPayloadType type,
                                               unsigned int size) {
   UnifexPayload *payload = unifex_payload_alloc(env, type, size);
-  unsigned n = size < original->size ? size : original->size;
-  memcpy(payload->data, original->data, n);
+  size_t to_copy = size < original->size ? size : original->size;
+  memcpy(payload->data, original->data, to_copy);
   return payload;
 }
 
@@ -378,8 +378,8 @@ UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, UnifexPayload *payload,
       env, payload, payload->type, payload->size + SRTP_MAX_TRAILER_LEN);
   int len = (int)payload->size;
 
-  serr =
-      srtp_protect_mki(state->session, payload->data, &len, use_mki, mki_index);
+  serr = srtp_protect_mki(state->session, protected->data, &len, use_mki,
+                          mki_index);
   if (serr) {
     unifex_payload_release_ptr(&protected);
     return unifex_raise(env, srtp_strerror(serr));
