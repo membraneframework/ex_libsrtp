@@ -4,8 +4,6 @@
 
 #include <stdbool.h>
 
-#define NONEXISTENT_TERM 0
-
 #define EXCEPTION_MESSAGE_SIZE 512
 
 int on_load(UnifexEnv *env, void **priv_data) {
@@ -177,12 +175,14 @@ static void free_master_keys_array(srtp_policy_t *policy) {
   }
 }
 
-static UNIFEX_TERM
-create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
-                         unsigned int keys_length, UnifexPayload **keys_mkis,
-                         unsigned int keys_mkis_length, srtp_policy_t *policy) {
+static bool create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
+                                     unsigned int keys_length,
+                                     UnifexPayload **keys_mkis,
+                                     unsigned int keys_mkis_length,
+                                     srtp_policy_t *policy, UNIFEX_TERM *err) {
   if (keys_length == 0) {
-    return unifex_raise_args_error(env, "keys", "must not be empty");
+    *err = unifex_raise_args_error(env, "keys", "must not be empty");
+    return false;
   }
 
   // Validate key length
@@ -193,26 +193,29 @@ create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
       snprintf(message, EXCEPTION_MESSAGE_SIZE,
                "srtp: master key #%zu must have length of %d but has %d", i,
                expected_length, keys[i]->size);
-      return unifex_raise(env, message);
+      *err = unifex_raise(env, message);
+      return false;
     }
   }
 
   // Single master key scenario
   if (keys_length == 1 && keys_mkis_length == 0) {
     policy->key = keys[0]->data;
-    return NONEXISTENT_TERM;
+    return true;
   }
 
   if (keys_length != keys_mkis_length) {
-    return unifex_raise_args_error(env, "keys_mkis",
+    *err = unifex_raise_args_error(env, "keys_mkis",
                                    "must be of same length as keys");
+    return false;
   }
 
   policy->keys = unifex_alloc(sizeof(srtp_master_key_t *) * keys_length);
   policy->num_master_keys = keys_length;
   if (!policy->keys) {
     free_master_keys_array(policy);
-    return unifex_raise(env, "not enough memory");
+    *err = unifex_raise(env, "not enough memory");
+    return false;
   }
 
   // Set all pointers to NULL
@@ -222,7 +225,8 @@ create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
     srtp_master_key_t *key = unifex_alloc(sizeof(srtp_master_key_t));
     if (!key) {
       free_master_keys_array(policy);
-      return unifex_raise(env, "not enough memory");
+      *err = unifex_raise(env, "not enough memory");
+      return false;
     }
 
     key->key = keys[i]->data;
@@ -232,7 +236,7 @@ create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
     policy->keys[i] = key;
   }
 
-  return NONEXISTENT_TERM;
+  return true;
 }
 
 UNIFEX_TERM add_stream(UnifexEnv *env, UnifexState *state, int ssrc_type,
@@ -243,6 +247,7 @@ UNIFEX_TERM add_stream(UnifexEnv *env, UnifexState *state, int ssrc_type,
                        int allow_repeat_tx) {
   int err;
   srtp_err_status_t serr;
+  UNIFEX_TERM uerr;
 
   srtp_policy_t policy;
   memset(&policy, 0, sizeof(srtp_policy_t));
@@ -268,9 +273,9 @@ UNIFEX_TERM add_stream(UnifexEnv *env, UnifexState *state, int ssrc_type,
   }
 
   err = create_master_keys_array(env, keys, keys_length, keys_mkis,
-                                 keys_mkis_length, &policy);
-  if (err != NONEXISTENT_TERM) {
-    return err;
+                                 keys_mkis_length, &policy, &uerr);
+  if (!err) {
+    return uerr;
   }
 
   serr = srtp_add_stream(state->session, &policy);
