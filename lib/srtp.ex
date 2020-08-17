@@ -1,4 +1,6 @@
 defmodule SRTP do
+  require Record
+
   alias SRTP.{Native, Policy}
 
   @opaque t :: {__MODULE__, reference}

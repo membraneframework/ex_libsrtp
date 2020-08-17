@@ -11,7 +11,12 @@ defmodule Membrane.Element.Template.BundlexProject do
     [
       srtp: [
         interface: :nif,
-        sources: ["srtp.c", "_generated/nif/srtp.c"],
+        sources: [
+          "srtp.c",
+          "srtp_util.c",
+          "unifex_util.c",
+          "_generated/nif/srtp.c"
+        ],
         deps: [unifex: :unifex],
         pkg_configs: ["libsrtp2"]
       ]
