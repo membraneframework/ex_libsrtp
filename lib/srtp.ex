@@ -5,7 +5,7 @@ defmodule SRTP do
 
   @type ssrc_t :: Policy.ssrc_t()
 
-  @spec is_ssrc(any) :: {:__block__ | {:., [], [:erlang | :is_integer, ...]}, [], [...]}
+  @spec is_ssrc(any) :: boolean()
   defguard is_ssrc(ssrc) when is_integer(ssrc)
 
   defmacrop ref(native) do
