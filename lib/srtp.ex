@@ -1,7 +1,7 @@
 defmodule SRTP do
   alias SRTP.{Native, Policy}
 
-  @opaque t :: {__MODULE__, any()}
+  @opaque t :: {__MODULE__, reference}
 
   @type ssrc_t :: Policy.ssrc_t()
 
