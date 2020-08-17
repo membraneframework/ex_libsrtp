@@ -168,10 +168,10 @@ static void free_master_keys_array(srtp_policy_t *policy) {
   if (!policy->keys && policy->num_master_keys > 0) {
     for (size_t i = 0; i < policy->num_master_keys; i++) {
       srtp_master_key_t *key = policy->keys[i];
-      enif_free(key);
+      unifex_free(key);
     }
 
-    enif_free(policy->keys);
+    unifex_free(policy->keys);
     policy->keys = NULL;
     policy->num_master_keys = 0;
   }
@@ -208,7 +208,7 @@ create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
                                    "must be of same length as keys");
   }
 
-  policy->keys = enif_alloc(sizeof(srtp_master_key_t *) * keys_length);
+  policy->keys = unifex_alloc(sizeof(srtp_master_key_t *) * keys_length);
   policy->num_master_keys = keys_length;
   if (!policy->keys) {
     free_master_keys_array(policy);
@@ -219,7 +219,7 @@ create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
   memset(policy->keys, 0, sizeof(srtp_master_key_t *) * keys_length);
 
   for (size_t i = 0; i < keys_length; i++) {
-    srtp_master_key_t *key = enif_alloc(sizeof(srtp_master_key_t));
+    srtp_master_key_t *key = unifex_alloc(sizeof(srtp_master_key_t));
     if (!key) {
       free_master_keys_array(policy);
       return unifex_raise(env, "not enough memory");
