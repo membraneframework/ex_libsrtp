@@ -9,7 +9,7 @@ defmodule SRTP.Mixfile do
       app: :srtp,
       version: @version,
       elixir: "~> 1.10",
-      compilers: [:bundlex] ++ Mix.compilers(),
+      compilers: [:unifex, :bundlex] ++ Mix.compilers(),
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),

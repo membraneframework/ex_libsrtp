@@ -290,7 +290,9 @@ UNIFEX_TERM add_stream(UnifexEnv *env, UnifexState *state, int ssrc_type,
 }
 
 UNIFEX_TERM remove_stream(UnifexEnv *env, UnifexState *state, uint ssrc) {
-  srtp_err_status_t serr = srtp_remove_stream(state->session, ssrc);
+  // htonl below is required due to legacy reasons, see
+  // https://github.com/cisco/libsrtp/issues/306
+  srtp_err_status_t serr = srtp_remove_stream(state->session, htonl(ssrc));
   if (serr) {
     return unifex_raise(env, srtp_strerror(serr));
   }

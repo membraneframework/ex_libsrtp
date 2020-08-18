@@ -8,13 +8,10 @@ defmodule SRTP.WordsTest do
     {nil, decrypted} = SamplePacket.load!("words_decrypted.txt")
 
     srtp = SRTP.new()
-
-    policy = %SRTP.Policy{
-      ssrc: 0xDEADBEEF,
-      key: master_key
-    }
-
-    SRTP.add_stream(srtp, policy)
+    ssrc = 0xDEADBEEF
+    policy = %SRTP.Policy{ssrc: ssrc, key: master_key}
+    :ok = SRTP.add_stream(srtp, policy)
+    on_exit(fn -> SRTP.remove_stream(srtp, ssrc) end)
 
     [
       master_key: master_key,
