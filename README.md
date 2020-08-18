@@ -1,5 +1,7 @@
 # Elixir bindings for [libsrtp]
 
+### **Warning: this library is experimental**
+
 [![Hex.pm](https://img.shields.io/hexpm/v/srtp.svg)](https://hex.pm/packages/srtp)
 [![CircleCI](https://circleci.com/gh/membraneframework/elixir-srtp.svg?style=svg)](https://circleci.com/gh/membraneframework/elixir-srtp)
 
