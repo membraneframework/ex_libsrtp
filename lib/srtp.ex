@@ -1,7 +1,7 @@
 defmodule SRTP do
-  require Record
-
   alias SRTP.{Native, Policy}
+
+  require Record
 
   @opaque t :: {__MODULE__, reference}
 
@@ -16,7 +16,7 @@ defmodule SRTP do
     end
   end
 
-  @spec new :: t()
+  @spec new() :: t()
   def new() do
     ref(Native.create())
   end

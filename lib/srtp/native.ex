@@ -1,10 +1,9 @@
 defmodule SRTP.Native do
   @moduledoc false
 
-  alias SRTP.MasterKey
-  alias SRTP.Policy
-
   use Unifex.Loader
+
+  alias SRTP.{MasterKey, Policy}
 
   @spec marshal_ssrc(Policy.ssrc_t()) :: {pos_integer(), pos_integer()}
   def marshal_ssrc(:any_inbound), do: {2, 0}
