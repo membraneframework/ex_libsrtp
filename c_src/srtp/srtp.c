@@ -22,137 +22,6 @@ void on_unload(UnifexEnv *env, void *priv_data) {
   srtp_shutdown();
 }
 
-static bool unmarshal_ssrc(int ssrc_type, uint ssrc, srtp_ssrc_t *result) {
-  switch (ssrc_type) {
-  case ssrc_specific:
-    result->type = ssrc_specific;
-    result->value = ssrc;
-    return true;
-  case ssrc_any_inbound:
-    result->type = ssrc_any_inbound;
-    return true;
-  case ssrc_any_outbound:
-    result->type = ssrc_any_outbound;
-    return true;
-  default:
-    return false;
-  }
-}
-
-static bool
-set_crypto_policy_from_crypto_profile_atom(char *crypto_profile,
-                                           srtp_crypto_policy_t *policy) {
-  if (strcmp(crypto_profile, "rtp_default") == 0) {
-    srtp_crypto_policy_set_rtp_default(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "rtcp_default") == 0) {
-    srtp_crypto_policy_set_rtcp_default(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_cm_128_hmac_sha1_80") == 0) {
-    srtp_crypto_policy_set_aes_cm_128_hmac_sha1_80(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_cm_128_hmac_sha1_32") == 0) {
-    srtp_crypto_policy_set_aes_cm_128_hmac_sha1_32(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_cm_128_null_auth") == 0) {
-    srtp_crypto_policy_set_aes_cm_128_null_auth(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "null_cipher_hmac_sha1_80") == 0) {
-    srtp_crypto_policy_set_null_cipher_hmac_sha1_80(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "null_cipher_hmac_null") == 0) {
-    srtp_crypto_policy_set_null_cipher_hmac_null(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_cm_256_hmac_sha1_80") == 0) {
-    srtp_crypto_policy_set_aes_cm_256_hmac_sha1_80(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_cm_256_hmac_sha1_32") == 0) {
-    srtp_crypto_policy_set_aes_cm_256_hmac_sha1_32(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_cm_256_null_auth") == 0) {
-    srtp_crypto_policy_set_aes_cm_256_null_auth(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_cm_192_hmac_sha1_80") == 0) {
-    srtp_crypto_policy_set_aes_cm_192_hmac_sha1_80(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_cm_192_hmac_sha1_32") == 0) {
-    srtp_crypto_policy_set_aes_cm_192_hmac_sha1_32(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_cm_192_null_auth") == 0) {
-    srtp_crypto_policy_set_aes_cm_192_null_auth(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_gcm_128_8_auth") == 0) {
-    srtp_crypto_policy_set_aes_gcm_128_8_auth(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_gcm_256_8_auth") == 0) {
-    srtp_crypto_policy_set_aes_gcm_256_8_auth(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_gcm_128_8_only_auth") == 0) {
-    srtp_crypto_policy_set_aes_gcm_128_8_only_auth(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_gcm_256_8_only_auth") == 0) {
-    srtp_crypto_policy_set_aes_gcm_256_8_only_auth(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_gcm_128_16_auth") == 0) {
-    srtp_crypto_policy_set_aes_gcm_128_16_auth(policy);
-    return true;
-  }
-
-  if (strcmp(crypto_profile, "aes_gcm_256_16_auth") == 0) {
-    srtp_crypto_policy_set_aes_gcm_256_16_auth(policy);
-    return true;
-  }
-
-  return false;
-}
-
-UNIFEX_TERM create(UnifexEnv *env) {
-  UnifexState *state = unifex_alloc_state(env);
-  state->session = NULL;
-
-  srtp_err_status_t err = srtp_create(&state->session, NULL);
-  if (err) {
-    unifex_release_state(env, state);
-    return unifex_raise(env, srtp_strerror(err));
-  }
-
-  return create_result(env, state);
-}
-
 void handle_destroy_state(UnifexEnv *env, UnifexState *state) {
   if (state->session) {
     srtp_dealloc(state->session);
@@ -239,6 +108,19 @@ static bool create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
   return true;
 }
 
+UNIFEX_TERM create(UnifexEnv *env) {
+  UnifexState *state = unifex_alloc_state(env);
+  state->session = NULL;
+
+  srtp_err_status_t err = srtp_create(&state->session, NULL);
+  if (err) {
+    unifex_release_state(env, state);
+    return unifex_raise(env, srtp_util_strerror(err));
+  }
+
+  return create_result(env, state);
+}
+
 UNIFEX_TERM add_stream(UnifexEnv *env, UnifexState *state, int ssrc_type,
                        uint ssrc, UnifexPayload **keys,
                        unsigned int keys_length, UnifexPayload **keys_mkis,
@@ -255,19 +137,19 @@ UNIFEX_TERM add_stream(UnifexEnv *env, UnifexState *state, int ssrc_type,
   policy.window_size = window_size;
   policy.allow_repeat_tx = allow_repeat_tx;
 
-  err = unmarshal_ssrc(ssrc_type, ssrc, &policy.ssrc);
+  err = srtp_util_unmarshal_ssrc(ssrc_type, ssrc, &policy.ssrc);
   if (!err) {
     return unifex_raise_args_error(env, "ssrc", "invalid");
   }
 
-  err = set_crypto_policy_from_crypto_profile_atom(rtp_crypto_profile,
-                                                   &policy.rtp);
+  err = srtp_util_set_crypto_policy_from_crypto_profile_atom(rtp_crypto_profile,
+                                                             &policy.rtp);
   if (!err) {
     return unifex_raise_args_error(env, "rtp", "invalid");
   }
 
-  err = set_crypto_policy_from_crypto_profile_atom(rtcp_crypto_profile,
-                                                   &policy.rtcp);
+  err = srtp_util_set_crypto_policy_from_crypto_profile_atom(
+      rtcp_crypto_profile, &policy.rtcp);
   if (!err) {
     return unifex_raise_args_error(env, "rtcp", "invalid");
   }
@@ -283,7 +165,7 @@ UNIFEX_TERM add_stream(UnifexEnv *env, UnifexState *state, int ssrc_type,
   free_master_keys_array(&policy);
 
   if (serr) {
-    return unifex_raise(env, srtp_strerror(serr));
+    return unifex_raise(env, srtp_util_strerror(serr));
   }
 
   return add_stream_result_ok(env);
@@ -294,7 +176,7 @@ UNIFEX_TERM remove_stream(UnifexEnv *env, UnifexState *state, uint ssrc) {
   // https://github.com/cisco/libsrtp/issues/306
   srtp_err_status_t serr = srtp_remove_stream(state->session, htonl(ssrc));
   if (serr) {
-    return unifex_raise(env, srtp_strerror(serr));
+    return unifex_raise(env, srtp_util_strerror(serr));
   }
 
   return remove_stream_result_ok(env);
@@ -313,7 +195,7 @@ UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, UnifexPayload *payload,
                           mki_index);
   if (serr) {
     unifex_payload_release_ptr(&protected);
-    return unifex_raise(env, srtp_strerror(serr));
+    return unifex_raise(env, srtp_util_strerror(serr));
   }
 
   err = unifex_payload_realloc(protected, len);
@@ -347,7 +229,7 @@ UNIFEX_TERM unprotect(UnifexEnv *env, UnifexState *state,
     case srtp_err_status_bad_mki:
       return unprotect_result_error_bad_mki(env);
     default:
-      return unifex_raise(env, srtp_strerror(serr));
+      return unifex_raise(env, srtp_util_strerror(serr));
     }
   }
 

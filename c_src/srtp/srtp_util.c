@@ -1,6 +1,125 @@
 #include "srtp_util.h"
+#include <string.h>
 
-const char *srtp_strerror(srtp_err_status_t err) {
+bool srtp_util_unmarshal_ssrc(int ssrc_type, unsigned int ssrc,
+                              srtp_ssrc_t *result) {
+  switch (ssrc_type) {
+  case ssrc_specific:
+    result->type = ssrc_specific;
+    result->value = ssrc;
+    return true;
+  case ssrc_any_inbound:
+    result->type = ssrc_any_inbound;
+    return true;
+  case ssrc_any_outbound:
+    result->type = ssrc_any_outbound;
+    return true;
+  default:
+    return false;
+  }
+}
+
+bool srtp_util_set_crypto_policy_from_crypto_profile_atom(
+    char *crypto_profile, srtp_crypto_policy_t *policy) {
+  if (strcmp(crypto_profile, "rtp_default") == 0) {
+    srtp_crypto_policy_set_rtp_default(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "rtcp_default") == 0) {
+    srtp_crypto_policy_set_rtcp_default(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_cm_128_hmac_sha1_80") == 0) {
+    srtp_crypto_policy_set_aes_cm_128_hmac_sha1_80(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_cm_128_hmac_sha1_32") == 0) {
+    srtp_crypto_policy_set_aes_cm_128_hmac_sha1_32(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_cm_128_null_auth") == 0) {
+    srtp_crypto_policy_set_aes_cm_128_null_auth(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "null_cipher_hmac_sha1_80") == 0) {
+    srtp_crypto_policy_set_null_cipher_hmac_sha1_80(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "null_cipher_hmac_null") == 0) {
+    srtp_crypto_policy_set_null_cipher_hmac_null(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_cm_256_hmac_sha1_80") == 0) {
+    srtp_crypto_policy_set_aes_cm_256_hmac_sha1_80(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_cm_256_hmac_sha1_32") == 0) {
+    srtp_crypto_policy_set_aes_cm_256_hmac_sha1_32(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_cm_256_null_auth") == 0) {
+    srtp_crypto_policy_set_aes_cm_256_null_auth(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_cm_192_hmac_sha1_80") == 0) {
+    srtp_crypto_policy_set_aes_cm_192_hmac_sha1_80(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_cm_192_hmac_sha1_32") == 0) {
+    srtp_crypto_policy_set_aes_cm_192_hmac_sha1_32(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_cm_192_null_auth") == 0) {
+    srtp_crypto_policy_set_aes_cm_192_null_auth(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_gcm_128_8_auth") == 0) {
+    srtp_crypto_policy_set_aes_gcm_128_8_auth(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_gcm_256_8_auth") == 0) {
+    srtp_crypto_policy_set_aes_gcm_256_8_auth(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_gcm_128_8_only_auth") == 0) {
+    srtp_crypto_policy_set_aes_gcm_128_8_only_auth(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_gcm_256_8_only_auth") == 0) {
+    srtp_crypto_policy_set_aes_gcm_256_8_only_auth(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_gcm_128_16_auth") == 0) {
+    srtp_crypto_policy_set_aes_gcm_128_16_auth(policy);
+    return true;
+  }
+
+  if (strcmp(crypto_profile, "aes_gcm_256_16_auth") == 0) {
+    srtp_crypto_policy_set_aes_gcm_256_16_auth(policy);
+    return true;
+  }
+
+  return false;
+}
+
+const char *srtp_util_strerror(srtp_err_status_t err) {
   switch (err) {
   case srtp_err_status_ok:
     return "srtp: nothing to report";
