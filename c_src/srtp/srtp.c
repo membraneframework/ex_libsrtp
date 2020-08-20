@@ -4,6 +4,12 @@
 
 #include <stdbool.h>
 
+#ifdef _WIN32
+#include <winsock.h>
+#else
+#include <arpa/inet.h>
+#endif
+
 #define EXCEPTION_MESSAGE_SIZE 512
 
 int on_load(UnifexEnv *env, void **priv_data) {
