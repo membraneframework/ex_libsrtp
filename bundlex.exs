@@ -3,22 +3,21 @@ defmodule Membrane.Element.Template.BundlexProject do
 
   def project do
     [
-      natives: natives(Bundlex.platform())
+      natives: natives()
     ]
   end
 
-  defp natives(_platform) do
+  defp natives() do
     [
       srtp: [
         interface: :nif,
         sources: [
           "srtp.c",
           "srtp_util.c",
-          "unifex_util.c",
-          "_generated/nif/srtp.c"
+          "unifex_util.c"
         ],
-        deps: [unifex: :unifex],
-        pkg_configs: ["libsrtp2"]
+        pkg_configs: ["libsrtp2"],
+        preprocessor: Unifex
       ]
     ]
   end
