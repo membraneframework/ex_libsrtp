@@ -16,7 +16,7 @@ jobs:
 
   lint:
     docker:
-      - image: membrane/bionic-membrane:latest
+      - image: membrane/membrane:latest
         environment:
           MIX_ENV: dev
 
