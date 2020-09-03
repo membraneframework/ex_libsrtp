@@ -128,10 +128,10 @@ UNIFEX_TERM create(UnifexEnv *env) {
 }
 
 UNIFEX_TERM add_stream(UnifexEnv *env, UnifexState *state, int ssrc_type,
-                       uint ssrc, UnifexPayload **keys,
+                       unsigned ssrc, UnifexPayload **keys,
                        unsigned int keys_length, UnifexPayload **keys_mkis,
                        unsigned int keys_mkis_length, char *rtp_crypto_profile,
-                       char *rtcp_crypto_profile, uint window_size,
+                       char *rtcp_crypto_profile, unsigned window_size,
                        int allow_repeat_tx) {
   int err;
   srtp_err_status_t serr;
@@ -177,7 +177,7 @@ UNIFEX_TERM add_stream(UnifexEnv *env, UnifexState *state, int ssrc_type,
   return add_stream_result_ok(env);
 }
 
-UNIFEX_TERM remove_stream(UnifexEnv *env, UnifexState *state, uint ssrc) {
+UNIFEX_TERM remove_stream(UnifexEnv *env, UnifexState *state, unsigned ssrc) {
   // htonl below is required due to legacy reasons, see
   // https://github.com/cisco/libsrtp/issues/306
   srtp_err_status_t serr = srtp_remove_stream(state->session, htonl(ssrc));
@@ -189,7 +189,7 @@ UNIFEX_TERM remove_stream(UnifexEnv *env, UnifexState *state, uint ssrc) {
 }
 
 UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, UnifexPayload *payload,
-                    int use_mki, uint mki_index) {
+                    int use_mki, unsigned mki_index) {
   int err;
   srtp_err_status_t serr;
 
