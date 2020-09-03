@@ -37,7 +37,6 @@ defmodule SRTP.Mixfile do
 
   defp deps do
     [
-      {:membrane_core, "~> 0.5.3"},
       {:bunch, "~> 1.3"},
       {:unifex, "~> 0.3.0"},
       {:ex_doc, "~> 0.22", only: :dev, runtime: false},

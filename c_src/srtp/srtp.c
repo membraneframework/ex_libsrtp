@@ -188,8 +188,8 @@ UNIFEX_TERM remove_stream(UnifexEnv *env, UnifexState *state, unsigned ssrc) {
   return remove_stream_result_ok(env);
 }
 
-UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, UnifexPayload *payload,
-                    int use_mki, unsigned mki_index) {
+UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, char *what,
+                    UnifexPayload *payload, int use_mki, unsigned mki_index) {
   int err;
   srtp_err_status_t serr;
 
@@ -197,8 +197,11 @@ UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, UnifexPayload *payload,
       env, payload, payload->type, payload->size + SRTP_MAX_TRAILER_LEN);
   int len = (int)payload->size;
 
-  serr = srtp_protect_mki(state->session, protected->data, &len, use_mki,
-                          mki_index);
+  serr = !strcmp(what, "rtp")
+             ? srtp_protect_mki(state->session, protected->data, &len, use_mki,
+                                mki_index)
+             : srtp_protect_rtcp_mki(state->session, protected->data, &len,
+                                     use_mki, mki_index);
   if (serr) {
     unifex_payload_release_ptr(&protected);
     return unifex_raise(env, srtp_util_strerror(serr));
@@ -215,7 +218,7 @@ UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, UnifexPayload *payload,
   return res;
 }
 
-UNIFEX_TERM unprotect(UnifexEnv *env, UnifexState *state,
+UNIFEX_TERM unprotect(UnifexEnv *env, UnifexState *state, char *what,
                       UnifexPayload *payload, int use_mki) {
   int err;
   srtp_err_status_t serr;
@@ -223,7 +226,11 @@ UNIFEX_TERM unprotect(UnifexEnv *env, UnifexState *state,
   UnifexPayload *unprotected = unifex_payload_clone(env, payload);
   int len = (int)payload->size;
 
-  serr = srtp_unprotect_mki(state->session, unprotected->data, &len, use_mki);
+  serr =
+      !strcmp(what, "rtp")
+          ? srtp_unprotect_mki(state->session, unprotected->data, &len, use_mki)
+          : srtp_unprotect_rtcp_mki(state->session, unprotected->data, &len,
+                                    use_mki);
   if (serr) {
     unifex_payload_release_ptr(&unprotected);
 
