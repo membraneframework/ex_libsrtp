@@ -1,4 +1,4 @@
-defmodule SRTP.MasterKey do
+defmodule LibSRTP.MasterKey do
   @type t :: %__MODULE__{
           key: binary(),
           mki: binary()

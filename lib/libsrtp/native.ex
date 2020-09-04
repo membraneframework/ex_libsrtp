@@ -1,11 +1,11 @@
-defmodule SRTP.Native do
+defmodule LibSRTP.Native do
   @moduledoc false
 
   use Unifex.Loader
 
-  alias SRTP.{MasterKey, Policy}
+  alias LibSRTP.{MasterKey, Policy}
 
-  @spec marshal_ssrc(SRTP.ssrc_t()) :: {pos_integer(), pos_integer()}
+  @spec marshal_ssrc(LibSRTP.ssrc_t()) :: {pos_integer(), pos_integer()}
   def marshal_ssrc(:any_inbound), do: {2, 0}
   def marshal_ssrc(:any_outbound), do: {3, 0}
   def marshal_ssrc(ssrc) when is_number(ssrc), do: {1, ssrc}

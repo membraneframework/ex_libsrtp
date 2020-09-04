@@ -1,9 +1,9 @@
-defmodule SRTP.Policy do
+defmodule LibSRTP.Policy do
   # TODO: EKT, enc_xtn_hdr
 
-  alias SRTP.MasterKey
+  alias LibSRTP.MasterKey
 
-  @type ssrc_pattern_t :: SRTP.ssrc_t() | :any_inbound | :any_outbound
+  @type ssrc_pattern_t :: LibSRTP.ssrc_t() | :any_inbound | :any_outbound
 
   @type crypto_profile_t ::
           :rtp_default

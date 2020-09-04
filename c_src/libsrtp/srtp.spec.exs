@@ -1,4 +1,4 @@
-module SRTP.Native
+module LibSRTP.Native
 
 state_type "State"
 

@@ -1,5 +1,5 @@
-defmodule SRTP do
-  alias SRTP.{Native, Policy}
+defmodule LibSRTP do
+  alias LibSRTP.{Native, Policy}
 
   require Record
 

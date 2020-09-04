@@ -1,12 +1,12 @@
-defmodule SRTP.Mixfile do
+defmodule LibSRTP.Mixfile do
   use Mix.Project
 
   @version "0.1.0"
-  @github_url "https://github.com/membraneframework/elixir-srtp"
+  @github_url "https://github.com/membraneframework/elixir-libsrtp"
 
   def project do
     [
-      app: :srtp,
+      app: :libsrtp,
       version: @version,
       elixir: "~> 1.9",
       compilers: [:unifex, :bundlex] ++ Mix.compilers(),
@@ -19,7 +19,7 @@ defmodule SRTP.Mixfile do
       package: package(),
 
       # docs
-      name: "SRTP",
+      name: "LibSRTP",
       source_url: @github_url,
       homepage_url: "https://membraneframework.org",
       docs: docs()
