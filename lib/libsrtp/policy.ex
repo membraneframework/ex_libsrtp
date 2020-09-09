@@ -1,5 +1,11 @@
 defmodule LibSRTP.Policy do
-  # TODO: EKT, enc_xtn_hdr
+  @moduledoc """
+  Policy for setting up SRTP stream configuration.
+
+  For meaning of particular fields, please refer to LibSRTP documentation.
+  """
+
+  # TODO: add EKT, enc_xtn_hdr
 
   alias LibSRTP.MasterKey
 

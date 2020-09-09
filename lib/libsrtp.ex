@@ -1,4 +1,13 @@
 defmodule LibSRTP do
+  @moduledoc """
+  [LibSRTP](https://github.com/cisco/libsrtp) bindings for Elixir.
+
+  The workflow goes as follows:
+  - create LibSRTP instance with `new/0`
+  - add streams with `add_stream/2`
+  - protect or unprotect packets with `protect/3`, `unprotect/3`, `protect_rtcp/3`, `unprotect_rtcp/3`
+  - remove streams with `remove_stream/2`
+  """
   alias LibSRTP.{Native, Policy}
 
   require Record
@@ -21,7 +30,7 @@ defmodule LibSRTP do
   end
 
   @spec add_stream(t(), policy :: Policy.t()) :: :ok
-  def add_stream(ref(state), %Policy{} = policy) do
+  def add_stream(ref(state) = _srtp, %Policy{} = policy) do
     {ssrc_type, ssrc} = Native.marshal_ssrc(policy.ssrc)
     {keys, keys_mkis} = Native.marshal_master_keys(policy.key)
 
@@ -39,7 +48,7 @@ defmodule LibSRTP do
   end
 
   @spec remove_stream(t(), ssrc :: ssrc_t()) :: :ok
-  def remove_stream(ref(state), ssrc) when is_ssrc(ssrc) do
+  def remove_stream(ref(state) = _srtp, ssrc) when is_ssrc(ssrc) do
     Native.remove_stream(state, ssrc)
   end
 
@@ -69,13 +78,13 @@ defmodule LibSRTP do
 
   @spec unprotect(t(), protected :: binary(), use_mki :: boolean()) ::
           {:ok, unprotected :: binary()} | {:error, :auth_fail | :reply_fail | :bad_mki}
-  def unprotect(ref(state), protected, use_mki \\ false) do
+  def unprotect(ref(state) = _srtp, protected, use_mki \\ false) do
     Native.unprotect(state, :rtp, protected, use_mki)
   end
 
   @spec unprotect_rtcp(t(), protected :: binary(), use_mki :: boolean()) ::
           {:ok, unprotected :: binary()} | {:error, :auth_fail | :reply_fail | :bad_mki}
-  def unprotect_rtcp(ref(state), protected, use_mki \\ false) do
+  def unprotect_rtcp(ref(state) = _srtp, protected, use_mki \\ false) do
     Native.unprotect(state, :rtcp, protected, use_mki)
   end
 end
