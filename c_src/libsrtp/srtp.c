@@ -127,7 +127,7 @@ UNIFEX_TERM create(UnifexEnv *env) {
   return create_result(env, state);
 }
 
-bool init_policy(UnifexEnv *env, srtp_policy_t *policy, int ssrc_type,
+bool create_policy(UnifexEnv *env, srtp_policy_t *policy, int ssrc_type,
                  unsigned ssrc, UnifexPayload **keys, unsigned int keys_length,
                  UnifexPayload **keys_mkis, unsigned int keys_mkis_length,
                  char *rtp_crypto_profile, char *rtcp_crypto_profile,
@@ -179,7 +179,7 @@ UNIFEX_TERM add_stream(UnifexEnv *env, UnifexState *state, int ssrc_type,
 
   srtp_policy_t policy;
   bool ret =
-      init_policy(env, &policy, ssrc_type, ssrc, keys, keys_length,
+      create_policy(env, &policy, ssrc_type, ssrc, keys, keys_length,
                   keys_mkis, keys_mkis_length, rtp_crypto_profile,
                   rtcp_crypto_profile, window_size, allow_repeat_tx, &uerr);
   if (!ret) {
@@ -218,7 +218,7 @@ UNIFEX_TERM update(UnifexEnv *env, UnifexState *state, int ssrc_type,
   srtp_policy_t policy;
 
   bool ret =
-      init_policy(env, &policy, ssrc_type, ssrc, keys, keys_length,
+      create_policy(env, &policy, ssrc_type, ssrc, keys, keys_length,
                   keys_mkis, keys_mkis_length, rtp_crypto_profile,
                   rtcp_crypto_profile, window_size, allow_repeat_tx, &uerr);
   if (!ret) {
