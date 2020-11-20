@@ -127,43 +127,64 @@ UNIFEX_TERM create(UnifexEnv *env) {
   return create_result(env, state);
 }
 
+bool create_policy(UnifexEnv *env, srtp_policy_t *policy, int ssrc_type,
+                   unsigned ssrc, UnifexPayload **keys,
+                   unsigned int keys_length, UnifexPayload **keys_mkis,
+                   unsigned int keys_mkis_length, char *rtp_crypto_profile,
+                   char *rtcp_crypto_profile, unsigned window_size,
+                   int allow_repeat_tx, UNIFEX_TERM *unifex_error) {
+  int err;
+
+  memset(policy, 0, sizeof(srtp_policy_t));
+
+  policy->window_size = window_size;
+  policy->allow_repeat_tx = allow_repeat_tx;
+
+  err = srtp_util_unmarshal_ssrc(ssrc_type, ssrc, &policy->ssrc);
+  if (!err) {
+    *unifex_error = unifex_raise_args_error(env, "ssrc", "invalid");
+    return false;
+  }
+
+  err = srtp_util_set_crypto_policy_from_crypto_profile_atom(rtp_crypto_profile,
+                                                             &policy->rtp);
+  if (!err) {
+    *unifex_error = unifex_raise_args_error(env, "rtp", "invalid");
+    return false;
+  }
+
+  err = srtp_util_set_crypto_policy_from_crypto_profile_atom(
+      rtcp_crypto_profile, &policy->rtcp);
+  if (!err) {
+    *unifex_error = unifex_raise_args_error(env, "rtcp", "invalid");
+    return false;
+  }
+
+  err = create_master_keys_array(env, keys, keys_length, keys_mkis,
+                                 keys_mkis_length, policy, unifex_error);
+  if (!err) {
+    return false;
+  }
+
+  return true;
+}
+
 UNIFEX_TERM add_stream(UnifexEnv *env, UnifexState *state, int ssrc_type,
                        unsigned ssrc, UnifexPayload **keys,
                        unsigned int keys_length, UnifexPayload **keys_mkis,
                        unsigned int keys_mkis_length, char *rtp_crypto_profile,
                        char *rtcp_crypto_profile, unsigned window_size,
                        int allow_repeat_tx) {
-  int err;
   srtp_err_status_t serr;
-  UNIFEX_TERM uerr;
+  UNIFEX_TERM unifex_error;
 
   srtp_policy_t policy;
-  memset(&policy, 0, sizeof(srtp_policy_t));
-
-  policy.window_size = window_size;
-  policy.allow_repeat_tx = allow_repeat_tx;
-
-  err = srtp_util_unmarshal_ssrc(ssrc_type, ssrc, &policy.ssrc);
-  if (!err) {
-    return unifex_raise_args_error(env, "ssrc", "invalid");
-  }
-
-  err = srtp_util_set_crypto_policy_from_crypto_profile_atom(rtp_crypto_profile,
-                                                             &policy.rtp);
-  if (!err) {
-    return unifex_raise_args_error(env, "rtp", "invalid");
-  }
-
-  err = srtp_util_set_crypto_policy_from_crypto_profile_atom(
-      rtcp_crypto_profile, &policy.rtcp);
-  if (!err) {
-    return unifex_raise_args_error(env, "rtcp", "invalid");
-  }
-
-  err = create_master_keys_array(env, keys, keys_length, keys_mkis,
-                                 keys_mkis_length, &policy, &uerr);
-  if (!err) {
-    return uerr;
+  bool ret =
+      create_policy(env, &policy, ssrc_type, ssrc, keys, keys_length, keys_mkis,
+                    keys_mkis_length, rtp_crypto_profile, rtcp_crypto_profile,
+                    window_size, allow_repeat_tx, &unifex_error);
+  if (!ret) {
+    return unifex_error;
   }
 
   serr = srtp_add_stream(state->session, &policy);
@@ -186,6 +207,32 @@ UNIFEX_TERM remove_stream(UnifexEnv *env, UnifexState *state, unsigned ssrc) {
   }
 
   return remove_stream_result_ok(env);
+}
+
+UNIFEX_TERM update(UnifexEnv *env, UnifexState *state, int ssrc_type,
+                   unsigned ssrc, UnifexPayload **keys,
+                   unsigned int keys_length, UnifexPayload **keys_mkis,
+                   unsigned int keys_mkis_length, char *rtp_crypto_profile,
+                   char *rtcp_crypto_profile, unsigned window_size,
+                   int allow_repeat_tx) {
+  UNIFEX_TERM unifex_error;
+  srtp_policy_t policy;
+
+  bool ret =
+      create_policy(env, &policy, ssrc_type, ssrc, keys, keys_length, keys_mkis,
+                    keys_mkis_length, rtp_crypto_profile, rtcp_crypto_profile,
+                    window_size, allow_repeat_tx, &unifex_error);
+  if (!ret) {
+    return unifex_error;
+  }
+
+  srtp_err_status_t serr = srtp_update(state->session, &policy);
+  free_master_keys_array(&policy);
+  if (serr) {
+    return unifex_raise(env, srtp_util_strerror(serr));
+  }
+
+  return update_result_ok(env);
 }
 
 UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, char *what,

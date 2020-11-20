@@ -38,7 +38,7 @@ defmodule LibSRTP.Mixfile do
   defp deps do
     [
       {:bunch, "~> 1.3"},
-      {:unifex, "~> 0.3.0"},
+      {:unifex, "~> 0.3"},
       {:ex_doc, "~> 0.22", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0.0", only: :dev, runtime: false},
       {:credo, "~> 1.4", only: :dev, runtime: false}

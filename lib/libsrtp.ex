@@ -52,6 +52,24 @@ defmodule LibSRTP do
     Native.remove_stream(state, ssrc)
   end
 
+  @spec update(t(), policy :: Policy.t()) :: :ok
+  def update(ref(state), %Policy{} = policy) do
+    {ssrc_type, ssrc} = Native.marshal_ssrc(policy.ssrc)
+    {keys, keys_mkis} = Native.marshal_master_keys(policy.key)
+
+    Native.update(
+      state,
+      ssrc_type,
+      ssrc,
+      keys,
+      keys_mkis,
+      policy.rtp,
+      policy.rtcp,
+      policy.window_size,
+      policy.allow_repeat_tx
+    )
+  end
+
   @spec protect(t(), unprotected :: binary(), mki_index :: pos_integer() | nil) ::
           {:ok, protected :: binary()}
   def protect(srtp, unprotected, mki_index \\ nil)
