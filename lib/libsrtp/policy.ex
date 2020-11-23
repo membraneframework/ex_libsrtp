@@ -57,17 +57,17 @@ defmodule LibSRTP.Policy do
   """
   @spec crypto_profile_from_dtls_srtp_protection_profile(
           value :: pos_integer() | {pos_integer(), pos_integer()}
-        ) :: {:ok, crypto_profile_t()} | nil
+        ) :: {:ok, crypto_profile_t()} | :error
   def crypto_profile_from_dtls_srtp_protection_profile(0x01), do: {:ok, :aes_cm_128_hmac_sha1_80}
   def crypto_profile_from_dtls_srtp_protection_profile(0x02), do: {:ok, :aes_cm_128_hmac_sha1_32}
   def crypto_profile_from_dtls_srtp_protection_profile(0x05), do: {:ok, :null_cipher_hmac_sha1_80}
-  # not supported in libsrtp2
-  def crypto_profile_from_dtls_srtp_protection_profile(0x06), do: nil
+  # null_cipher_hmac_sha1_32 is not supported in libsrtp2
+  def crypto_profile_from_dtls_srtp_protection_profile(0x06), do: :error
   def crypto_profile_from_dtls_srtp_protection_profile(0x07), do: {:ok, :aes_gcm_128_16_auth}
   def crypto_profile_from_dtls_srtp_protection_profile(0x08), do: {:ok, :aes_gcm_256_16_auth}
 
   def crypto_profile_from_dtls_srtp_protection_profile(b) when is_number(b) do
-    nil
+    :error
   end
 
   def crypto_profile_from_dtls_srtp_protection_profile({0x00, b}) when is_number(b) do
@@ -76,6 +76,6 @@ defmodule LibSRTP.Policy do
 
   def crypto_profile_from_dtls_srtp_protection_profile({a, b})
       when is_number(a) and is_number(b) do
-    nil
+    :error
   end
 end

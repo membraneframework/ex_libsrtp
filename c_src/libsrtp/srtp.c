@@ -57,7 +57,7 @@ static bool create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
                                      srtp_policy_t *policy, UNIFEX_TERM *err) {
   if (keys_length == 0) {
     *err = unifex_raise_args_error(env, "keys", "must not be empty");
-    return false;
+    goto create_master_keys_array_error;
   }
 
   // Validate key length
@@ -69,7 +69,7 @@ static bool create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
                "srtp: master key #%zu must have length of %d but has %d", i,
                expected_length, keys[i]->size);
       *err = unifex_raise(env, message);
-      return false;
+      goto create_master_keys_array_error;
     }
   }
 
@@ -81,16 +81,16 @@ static bool create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
 
   if (keys_length != keys_mkis_length) {
     *err = unifex_raise_args_error(env, "keys_mkis",
-                                   "must be of same length as keys");
-    return false;
+                                   "if there are multiple keys, must be of "
+                                   "same length as keys, 0 otherwise");
+    goto create_master_keys_array_error;
   }
 
   policy->keys = unifex_alloc(sizeof(srtp_master_key_t *) * keys_length);
   policy->num_master_keys = keys_length;
   if (!policy->keys) {
-    free_master_keys_array(policy);
     *err = unifex_raise(env, "not enough memory");
-    return false;
+    goto create_master_keys_array_error;
   }
 
   // Set all pointers to NULL
@@ -99,9 +99,8 @@ static bool create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
   for (size_t i = 0; i < keys_length; i++) {
     srtp_master_key_t *key = unifex_alloc(sizeof(srtp_master_key_t));
     if (!key) {
-      free_master_keys_array(policy);
       *err = unifex_raise(env, "not enough memory");
-      return false;
+      goto create_master_keys_array_error;
     }
 
     key->key = keys[i]->data;
@@ -112,6 +111,10 @@ static bool create_master_keys_array(UnifexEnv *env, UnifexPayload **keys,
   }
 
   return true;
+
+create_master_keys_array_error:
+  free_master_keys_array(policy);
+  return false;
 }
 
 UNIFEX_TERM create(UnifexEnv *env) {

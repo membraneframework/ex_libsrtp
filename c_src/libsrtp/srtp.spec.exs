@@ -7,12 +7,6 @@ callback :unload, :on_unload
 
 spec create() :: state
 
-# typedef enum {
-#   ssrc_specific = 1,
-#   ssrc_any_inbound = 2,
-#   ssrc_any_outbound = 3
-# } srtp_ssrc_type_t;
-
 spec add_stream(
        state,
        ssrc_type :: int,
