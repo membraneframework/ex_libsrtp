@@ -1,12 +1,12 @@
-defmodule LibSRTP.Mixfile do
+defmodule ExLibSRTP.Mixfile do
   use Mix.Project
 
   @version "0.1.0"
-  @github_url "https://github.com/membraneframework/elixir-libsrtp"
+  @github_url "https://github.com/membraneframework/ex_libsrtp"
 
   def project do
     [
-      app: :libsrtp,
+      app: :ex_libsrtp,
       version: @version,
       elixir: "~> 1.9",
       compilers: [:unifex, :bundlex] ++ Mix.compilers(),
@@ -19,7 +19,7 @@ defmodule LibSRTP.Mixfile do
       package: package(),
 
       # docs
-      name: "LibSRTP",
+      name: "ExLibSRTP",
       source_url: @github_url,
       homepage_url: "https://membraneframework.org",
       docs: docs()
@@ -62,7 +62,7 @@ defmodule LibSRTP.Mixfile do
       main: "readme",
       extras: ["README.md", "LICENSE"],
       source_ref: "v#{@version}",
-      nest_modules_by_prefix: [LibSRTP]
+      nest_modules_by_prefix: [ExLibSRTP]
     ]
   end
 end

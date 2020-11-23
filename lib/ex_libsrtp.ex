@@ -1,14 +1,14 @@
-defmodule LibSRTP do
+defmodule ExLibSRTP do
   @moduledoc """
-  [LibSRTP](https://github.com/cisco/libsrtp) bindings for Elixir.
+  [ExLibSRTP](https://github.com/cisco/libsrtp) bindings for Elixir.
 
   The workflow goes as follows:
-  - create LibSRTP instance with `new/0`
+  - create ExLibSRTP instance with `new/0`
   - add streams with `add_stream/2`
   - protect or unprotect packets with `protect/3`, `unprotect/3`, `protect_rtcp/3`, `unprotect_rtcp/3`
   - remove streams with `remove_stream/2`
   """
-  alias LibSRTP.{Native, Policy}
+  alias ExLibSRTP.{Native, Policy}
 
   require Record
 

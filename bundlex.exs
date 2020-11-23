@@ -1,4 +1,4 @@
-defmodule Membrane.LibSRTP.BundlexProject do
+defmodule Membrane.ExLibSRTP.BundlexProject do
   use Bundlex.Project
 
   def project do

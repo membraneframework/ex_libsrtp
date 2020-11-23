@@ -1,7 +1,7 @@
-defmodule LibSRTP.NativeTest do
+defmodule ExLibSRTP.NativeTest do
   use ExUnit.Case
 
-  alias LibSRTP.Native
+  alias ExLibSRTP.Native
 
   test "creates successfully" do
     native = Native.create()

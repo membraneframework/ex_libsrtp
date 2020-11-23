@@ -1,15 +1,15 @@
-defmodule LibSRTP.Policy do
+defmodule ExLibSRTP.Policy do
   @moduledoc """
   Policy for setting up SRTP stream configuration.
 
-  For meaning of particular fields, please refer to LibSRTP documentation.
+  For meaning of particular fields, please refer to ExLibSRTP documentation.
   """
 
   # TODO: add EKT, enc_xtn_hdr
 
-  alias LibSRTP.MasterKey
+  alias ExLibSRTP.MasterKey
 
-  @type ssrc_pattern_t :: LibSRTP.ssrc_t() | :any_inbound | :any_outbound
+  @type ssrc_pattern_t :: ExLibSRTP.ssrc_t() | :any_inbound | :any_outbound
 
   @type crypto_profile_t ::
           :rtp_default

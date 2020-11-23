@@ -1,4 +1,4 @@
-defmodule LibSRTP.MasterKey do
+defmodule ExLibSRTP.MasterKey do
   @moduledoc """
   Struct containing SRTP master key and its identifier.
   """
