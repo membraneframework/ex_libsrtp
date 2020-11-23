@@ -8,7 +8,7 @@
 
 ## Installation
 
-The package can be installed by adding `srtp` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `libsrtp` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
