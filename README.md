@@ -3,6 +3,7 @@
 ### **Warning: this library is experimental**
 
 [![Hex.pm](https://img.shields.io/hexpm/v/srtp.svg)](https://hex.pm/packages/srtp)
+[![API Docs](https://img.shields.io/badge/api-docs-yellow.svg?style=flat)](https://hexdocs.pm/elixir-libsrtp/)
 [![CircleCI](https://circleci.com/gh/membraneframework/elixir-libsrtp.svg?style=svg)](https://circleci.com/gh/membraneframework/elixir-libsrtp)
 
 ## Installation
