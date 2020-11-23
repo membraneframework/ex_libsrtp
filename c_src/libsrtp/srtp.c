@@ -38,7 +38,7 @@ void handle_destroy_state(UnifexEnv *env, UnifexState *state) {
 }
 
 static void free_master_keys_array(srtp_policy_t *policy) {
-  if (!policy->keys && policy->num_master_keys > 0) {
+  if (policy->keys && policy->num_master_keys > 0) {
     for (size_t i = 0; i < policy->num_master_keys; i++) {
       srtp_master_key_t *key = policy->keys[i];
       unifex_free(key);
