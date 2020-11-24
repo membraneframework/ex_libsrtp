@@ -1,6 +1,6 @@
 # Elixir bindings for [libsrtp]
 
-[![Hex.pm](https://img.shields.io/hexpm/v/srtp.svg)](https://hex.pm/packages/srtp)
+[![Hex.pm](https://img.shields.io/hexpm/v/srtp.svg)](https://hex.pm/packages/ex_libsrtp)
 [![API Docs](https://img.shields.io/badge/api-docs-yellow.svg?style=flat)](https://hexdocs.pm/ex_libsrtp/)
 [![CircleCI](https://circleci.com/gh/membraneframework/ex_libsrtp.svg?style=svg)](https://circleci.com/gh/membraneframework/ex_libsrtp)
 
