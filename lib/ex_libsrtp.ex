@@ -1,6 +1,6 @@
 defmodule ExLibSRTP do
   @moduledoc """
-  [ExLibSRTP](https://github.com/cisco/libsrtp) bindings for Elixir.
+  [libsrtp](https://github.com/cisco/libsrtp) bindings for Elixir.
 
   The workflow goes as follows:
   - create ExLibSRTP instance with `new/0`
