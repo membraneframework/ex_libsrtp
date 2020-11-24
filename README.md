@@ -18,7 +18,7 @@ end
 
 ## Usage
 
-This library allows to encrypt plain RTP to SRTP and decrypt it back. The following snippet shows how to encrypt and decrypt a packet:
+This library allows to convert RTP to SRTP and the other way round. The following snippet shows how to encrypt and decrypt a packet:
 
 ```elixir
 iex> in_srtp = ExLibSRTP.new()
