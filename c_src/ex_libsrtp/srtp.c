@@ -253,18 +253,18 @@ UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, char *what,
              : srtp_protect_rtcp_mki(state->session, protected->data, &len,
                                      use_mki, mki_index);
   if (serr) {
-    unifex_payload_release_ptr(&protected);
+    unifex_payload_free_clone(protected);
     return unifex_raise(env, srtp_util_strerror(serr));
   }
 
   err = unifex_payload_realloc(protected, len);
   if (!err) {
-    unifex_payload_release_ptr(&protected);
+    unifex_payload_free_clone(protected);
     return unifex_raise(env, "failed to realloc protected payload");
   }
 
   UNIFEX_TERM res = protect_result_ok(env, protected);
-  unifex_payload_release_ptr(&protected);
+  unifex_payload_free_clone(protected);
   return res;
 }
 
@@ -282,7 +282,7 @@ UNIFEX_TERM unprotect(UnifexEnv *env, UnifexState *state, char *what,
           : srtp_unprotect_rtcp_mki(state->session, unprotected->data, &len,
                                     use_mki);
   if (serr) {
-    unifex_payload_release_ptr(&unprotected);
+    unifex_payload_free_clone(unprotected);
 
     switch (serr) {
     case srtp_err_status_auth_fail:
@@ -298,11 +298,11 @@ UNIFEX_TERM unprotect(UnifexEnv *env, UnifexState *state, char *what,
 
   err = unifex_payload_realloc(unprotected, len);
   if (!err) {
-    unifex_payload_release_ptr(&unprotected);
+    unifex_payload_free_clone(unprotected);
     return unifex_raise(env, "failed to realloc unprotected payload");
   }
 
   UNIFEX_TERM res = unprotect_result_ok(env, unprotected);
-  unifex_payload_release_ptr(&unprotected);
+  unifex_payload_free_clone(unprotected);
   return res;
 }
