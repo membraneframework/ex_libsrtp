@@ -254,7 +254,12 @@ UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, char *what,
                                      use_mki, mki_index);
   if (serr) {
     unifex_payload_free_clone(protected);
-    return unifex_raise(env, srtp_util_strerror(serr));
+    switch (serr) {
+    case srtp_err_status_replay_old:
+      return protect_result_error_replay_old(env);
+    default:
+      return unifex_raise(env, srtp_util_strerror(serr));
+    }
   }
 
   err = unifex_payload_realloc(protected, len);

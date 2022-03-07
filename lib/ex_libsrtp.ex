@@ -71,7 +71,7 @@ defmodule ExLibSRTP do
   end
 
   @spec protect(t(), unprotected :: binary(), mki_index :: pos_integer() | nil) ::
-          {:ok, protected :: binary()}
+          {:ok, protected :: binary()} | {:error, :reply_old}
   def protect(srtp, unprotected, mki_index \\ nil)
 
   def protect(ref(native), unprotected, nil) do
@@ -83,7 +83,7 @@ defmodule ExLibSRTP do
   end
 
   @spec protect_rtcp(t(), unprotected :: binary(), mki_index :: pos_integer() | nil) ::
-          {:ok, protected :: binary()}
+          {:ok, protected :: binary()} | {:error, :reply_old}
   def protect_rtcp(srtp, unprotected, mki_index \\ nil)
 
   def protect_rtcp(ref(native), unprotected, nil) do
