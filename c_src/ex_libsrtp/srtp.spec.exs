@@ -41,3 +41,4 @@ spec unprotect(state, what :: atom, payload, use_mki :: bool) ::
        | {:error :: label, :auth_fail :: label}
        | {:error :: label, :replay_fail :: label}
        | {:error :: label, :bad_mki :: label}
+       | {:error :: label, :replay_too_old :: label}
