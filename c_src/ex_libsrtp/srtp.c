@@ -291,6 +291,8 @@ UNIFEX_TERM unprotect(UnifexEnv *env, UnifexState *state, char *what,
       return unprotect_result_error_replay_fail(env);
     case srtp_err_status_bad_mki:
       return unprotect_result_error_bad_mki(env);
+    case srtp_err_status_replay_old:
+        return unprotect_result_error_replay_too_old(env);
     default:
       return unifex_raise(env, srtp_util_strerror(serr));
     }
