@@ -1,7 +1,7 @@
 defmodule ExLibSRTP.Mixfile do
   use Mix.Project
 
-  @version "0.4.0"
+  @version "0.5.0"
   @github_url "https://github.com/membraneframework/ex_libsrtp"
 
   def project do
