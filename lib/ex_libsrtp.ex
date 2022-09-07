@@ -8,9 +8,9 @@ defmodule ExLibSRTP do
   - protect or unprotect packets with `protect/3`, `unprotect/3`, `protect_rtcp/3`, `unprotect_rtcp/3`
   - remove streams with `remove_stream/2`
   """
-  alias ExLibSRTP.{Native, Policy}
-
   require Record
+
+  alias ExLibSRTP.{Native, Policy}
 
   @opaque t :: {__MODULE__, native :: reference}
 

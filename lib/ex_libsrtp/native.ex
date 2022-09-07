@@ -3,9 +3,9 @@ defmodule ExLibSRTP.Native do
 
   use Unifex.Loader
 
-  alias ExLibSRTP.{MasterKey, Policy}
-
   require ExLibSRTP
+
+  alias ExLibSRTP.{MasterKey, Policy}
 
   @spec marshal_ssrc(ExLibSRTP.Policy.ssrc_pattern_t()) :: {ssrc_type :: 1..3, ExLibSRTP.ssrc_t()}
   def marshal_ssrc(:any_inbound), do: {2, 0}
