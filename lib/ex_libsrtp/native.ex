@@ -3,9 +3,10 @@ defmodule ExLibSRTP.Native do
 
   use Unifex.Loader
 
-  alias ExLibSRTP.{MasterKey, Policy}
-
   require ExLibSRTP
+  require Logger
+
+  alias ExLibSRTP.{MasterKey, Policy}
 
   @spec marshal_ssrc(ExLibSRTP.Policy.ssrc_pattern_t()) :: {ssrc_type :: 1..3, ExLibSRTP.ssrc_t()}
   def marshal_ssrc(:any_inbound), do: {2, 0}
@@ -22,4 +23,19 @@ defmodule ExLibSRTP.Native do
     |> Enum.map(fn %MasterKey{key: key, mki: mki} -> {key, mki} end)
     |> Enum.unzip()
   end
+
+  @spec marshal_window_size(:default | pos_integer()) :: 0 | 64..32_768
+  def marshal_window_size(:default), do: 0
+
+  def marshal_window_size(window) when window < 64 do
+    Logger.warn("ExLibSRTP: Window size to small, setting to 64")
+    64
+  end
+
+  def marshal_window_size(window) when window > 32_768 do
+    Logger.warn("ExLibSRTP: Window size to large, setting to 32768")
+    32_768
+  end
+
+  def marshal_window_size(window), do: window
 end
