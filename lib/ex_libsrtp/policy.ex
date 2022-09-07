@@ -2,7 +2,20 @@ defmodule ExLibSRTP.Policy do
   @moduledoc """
   Policy for setting up SRTP stream configuration.
 
-  For meaning of particular fields, please refer to ExLibSRTP documentation.
+  For meaning of particular fields maps to the fields of `srtp_policy_t` C struct found in libSRTP.
+  It is described in [srtp.h header](https://github.com/cisco/libsrtp/blob/43dab118f7acbd471edd68ca16e23ed7075dbd38/include/srtp.h#L285)
+
+  Here's a brief description:
+    * `:ssrc` - Either an accepted SSRC or atoms mapping to `SSRC_ANY_(INBOUND/OUTBOUND)` flags
+    * `:key` - a master key for encrpytion
+    * `:rtp` - crypto profile defining a policy for RTP encryption
+    * `:rtcp` - crypto profile defining a policy for RTCP encryption
+    * `:windows_size` - the sequence number window size used for replay protection
+      As the comment [here](https://github.com/cisco/libsrtp/blob/43dab118f7acbd471edd68ca16e23ed7075dbd38/srtp/srtp.c#L1270) says,
+      it must be at least 64 and any value above 2^15 (32768) won't be effective as explained [here](https://github.com/cisco/libsrtp/issues/470).
+      The default value is 128
+    * `:allow_repeat_tx` - if true, packet with repeated sequence number won't cause an error.
+      Note that unless the RTP payload is the same it may introduce a severe security weakness.
   """
 
   # TODO: add EKT, enc_xtn_hdr
@@ -39,7 +52,7 @@ defmodule ExLibSRTP.Policy do
           key: key_spec_t(),
           rtp: crypto_profile_t(),
           rtcp: crypto_profile_t(),
-          window_size: pos_integer(),
+          window_size: 64..32_768 | :default,
           allow_repeat_tx: boolean()
         }
 
@@ -48,7 +61,7 @@ defmodule ExLibSRTP.Policy do
               [
                 rtp: :rtp_default,
                 rtcp: :rtcp_default,
-                window_size: 0,
+                window_size: :default,
                 allow_repeat_tx: false
               ]
 

@@ -33,6 +33,7 @@ defmodule ExLibSRTP do
   def add_stream(ref(native) = _srtp, %Policy{} = policy) do
     {ssrc_type, ssrc} = Native.marshal_ssrc(policy.ssrc)
     {keys, keys_mkis} = Native.marshal_master_keys(policy.key)
+    window_size = Native.marshal_window_size(policy.window_size)
 
     Native.add_stream(
       native,
@@ -42,7 +43,7 @@ defmodule ExLibSRTP do
       keys_mkis,
       policy.rtp,
       policy.rtcp,
-      policy.window_size,
+      window_size,
       policy.allow_repeat_tx
     )
   end
@@ -56,6 +57,7 @@ defmodule ExLibSRTP do
   def update(ref(native), %Policy{} = policy) do
     {ssrc_type, ssrc} = Native.marshal_ssrc(policy.ssrc)
     {keys, keys_mkis} = Native.marshal_master_keys(policy.key)
+    window_size = Native.marshal_window_size(policy.window_size)
 
     Native.update(
       native,
@@ -65,7 +67,7 @@ defmodule ExLibSRTP do
       keys_mkis,
       policy.rtp,
       policy.rtcp,
-      policy.window_size,
+      window_size,
       policy.allow_repeat_tx
     )
   end
