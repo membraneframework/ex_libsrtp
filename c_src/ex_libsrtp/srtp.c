@@ -2,6 +2,7 @@
 #include "srtp_util.h"
 #include "unifex_util.h"
 
+#include <srtp2/srtp.h>
 #include <stdbool.h>
 
 #ifdef _WIN32
@@ -254,8 +255,16 @@ UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, char *what,
                                      use_mki, mki_index);
   if (serr) {
     unifex_payload_free_clone(protected);
-    return unifex_raise(env, srtp_util_strerror(serr));
+    switch(serr) {
+      case srtp_err_status_replay_fail:
+	return protect_result_error_srtp_err_status_replay_fail(env);
+      case srtp_err_status_replay_old:
+	return protect_result_error_srtp_err_status_replay_old(env);
+      default:
+	return protect_result_error_other(env, srtp_util_strerror(serr));
+      }
   }
+
 
   err = unifex_payload_realloc(protected, len);
   if (!err) {
