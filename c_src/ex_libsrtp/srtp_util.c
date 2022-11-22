@@ -183,63 +183,65 @@ const char *srtp_util_strerror(srtp_err_status_t err) {
   }
 }
 
-const char *strp_util_srterror_short(srtp_err_status_t err) {
+const char *srtp_util_strerror_short(srtp_err_status_t err) {
   switch(err) {
-    case 0:
+    case srtp_err_status_ok:
       return "srtp_err_status_ok";
-    case 1:
+    case srtp_err_status_fail:
       return "srtp_err_status_fail";
-    case 2:
+    case srtp_err_status_bad_param:
       return "srtp_err_status_bad_param";
-    case 3:
+    case srtp_err_status_alloc_fail:
       return "srtp_err_status_alloc_fail";
-    case 4:
+    case srtp_err_status_dealloc_fail:
       return "srtp_err_status_dealloc_fail";
-    case 5:
+    case srtp_err_status_init_fail:
       return "srtp_err_status_init_fail";
-    case 6:
+    case srtp_err_status_terminus:
       return "srtp_err_status_terminus";
-    case 7:
+    case srtp_err_status_auth_fail:
       return "srtp_err_status_auth_fail";
-    case 8:
+    case srtp_err_status_cipher_fail:
       return "srtp_err_status_cipher_fail";
-    case 9:
+    case srtp_err_status_replay_fail:
       return "srtp_err_status_replay_fail";
-    case 10:
+    case srtp_err_status_replay_old:
       return "srtp_err_status_replay_old";
-    case 11:
+    case srtp_err_status_algo_fail:
       return "srtp_err_status_algo_fail";
-    case 12:
+    case srtp_err_status_no_such_op:
       return "srtp_err_status_no_such_op";
-    case 13:
+    case srtp_err_status_no_ctx:
       return "srtp_err_status_no_ctx";
-    case 14:
+    case srtp_err_status_cant_check:
       return "srtp_err_status_cant_check";
-    case 15:
+    case srtp_err_status_key_expired:
       return "srtp_err_status_key_expired";
-    case 16:
+    case srtp_err_status_socket_err:
       return "srtp_err_status_socket_err";
-    case 17:
+    case srtp_err_status_signal_err:
       return "srtp_err_status_signal_err";
-    case 18:
+    case srtp_err_status_nonce_bad:
       return "srtp_err_status_nonce_bad";
-    case 19:
+    case srtp_err_status_read_fail:
       return "srtp_err_status_read_fail";
-    case 20:
+    case srtp_err_status_write_fail:
       return "srtp_err_status_write_fail";
-    case 21:
+    case srtp_err_status_parse_err:
       return "srtp_err_status_parse_err";
-    case 22:
+    case srtp_err_status_encode_err:
       return "srtp_err_status_encode_err";
-    case 23:
+    case srtp_err_status_semaphore_err:
       return "srtp_err_status_semaphore_err";
-    case 24:
+    case srtp_err_status_pfkey_err:
       return "srtp_err_status_pfkey_err";
-    case 25:
+    case srtp_err_status_bad_mki:
       return "srtp_err_status_bad_mki";
-    case 26:
+    case srtp_err_status_pkt_idx_old:
       return "srtp_err_status_pkt_idx_old";
-    case 27:
+    case srtp_err_status_pkt_idx_adv:
       return "srtp_err_status_pkt_idx_adv";
+    default:
+      return "srtp_unknown_error";
   }
 }
