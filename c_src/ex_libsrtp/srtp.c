@@ -303,7 +303,7 @@ UNIFEX_TERM unprotect(UnifexEnv *env, UnifexState *state, char *what,
     case srtp_err_status_replay_old:
         return unprotect_result_error_replay_too_old(env);
     default:
-      return unifex_raise(env, srtp_util_strerror(serr));
+      return unprotect_result_error_other(env, srtp_util_strerror(serr));
     }
   }
 
