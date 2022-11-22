@@ -35,14 +35,8 @@ spec update(
 
 spec protect(state, what :: atom, payload, use_mki :: bool, mki_index :: unsigned) ::
        {:ok :: label, payload}
-       | {:error :: label, :srtp_err_status_replay_old :: label}
-       | {:error :: label, :srtp_err_status_replay_fail :: label}
-       | {:error :: label, {:other :: label, string}}
+       | {:error :: label, reason :: atom}
 
 spec unprotect(state, what :: atom, payload, use_mki :: bool) ::
        {:ok :: label, payload}
-       | {:error :: label, :auth_fail :: label}
-       | {:error :: label, :replay_fail :: label}
-       | {:error :: label, :bad_mki :: label}
-       | {:error :: label, :replay_too_old :: label}
-       | {:error :: label, {:other :: label, string}}
+       | {:error :: label, reason :: atom}
