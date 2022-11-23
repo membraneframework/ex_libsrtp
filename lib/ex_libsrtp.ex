@@ -114,6 +114,7 @@ defmodule ExLibSRTP do
   Most common errors:
   - `:replay_fail` - packet has either a duplicate sequence number or its sequence number has an old rollover counter (roc)
   - `:replay_old` - packet has a sequence number with current roc, but it is older than the beginning of the encryption window.
+  - `:bad_mki` - provided MKI is not a known MKI id
 
   Other errors indicate a failure in cryptographic mechanisms, please refer to [libsrtp documentation](https://github.com/cisco/libsrtp)
   """
@@ -129,6 +130,11 @@ defmodule ExLibSRTP do
     Native.protect(native, :rtp, unprotected, true, mki_index)
   end
 
+  @doc """
+  Protect RTCP packet.
+
+  All errors indicate an error in the cryptographic mechanisms.
+  """
   @spec protect_rtcp(t(), unprotected :: binary(), mki_index :: pos_integer() | nil) ::
           {:ok, protected :: binary()} | {:error, libsrtp_error_t()}
   def protect_rtcp(srtp, unprotected, mki_index \\ nil)
@@ -157,6 +163,16 @@ defmodule ExLibSRTP do
     Native.unprotect(native, :rtp, protected, use_mki)
   end
 
+  @doc """
+  Unprotect RTCP packet.
+
+  Expected errors:
+  - `:auth_fail` - SRTCP message has failed the message authentication check.
+  - `:replay_fail` - SRTCP message is a duplicate
+  - `:bad_mki` - provided MKI is not a known MKI id
+
+  Other errors indicate issues in the cryptographic mechanisms.
+  """
   @spec unprotect_rtcp(t(), protected :: binary(), use_mki :: boolean()) ::
           {:ok, unprotected :: binary()} | {:error, libsrtp_error_t}
   def unprotect_rtcp(ref(native) = _srtp, protected, use_mki \\ false) do
