@@ -2,7 +2,6 @@
 #include "srtp_util.h"
 #include "unifex_util.h"
 
-#include <srtp2/srtp.h>
 #include <stdbool.h>
 
 #ifdef _WIN32
@@ -255,7 +254,7 @@ UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, char *what,
                                      use_mki, mki_index);
   if (serr) {
     unifex_payload_free_clone(protected);
-    return protect_result_error(env, srtp_util_strerror_short(serr));
+    return protect_result_error(env, srtp_util_error_to_atom(serr));
   }
 
 
@@ -285,7 +284,7 @@ UNIFEX_TERM unprotect(UnifexEnv *env, UnifexState *state, char *what,
                                     use_mki);
   if (serr) {
     unifex_payload_free_clone(unprotected);
-    return unprotect_result_error(env, srtp_util_strerror_short(serr));
+    return unprotect_result_error(env, srtp_util_error_to_atom(serr));
   }
 
   err = unifex_payload_realloc(unprotected, len);
