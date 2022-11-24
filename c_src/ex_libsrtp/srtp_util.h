@@ -11,5 +11,4 @@ bool srtp_util_unmarshal_ssrc(int ssrc_type, unsigned int ssrc,
 bool srtp_util_set_crypto_policy_from_crypto_profile_atom(
     char *crypto_profile, srtp_crypto_policy_t *policy);
 
-
 const char *srtp_util_error_to_atom(srtp_err_status_t err);

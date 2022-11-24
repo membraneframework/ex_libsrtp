@@ -257,7 +257,6 @@ UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, char *what,
     return protect_result_error(env, srtp_util_error_to_atom(serr));
   }
 
-
   err = unifex_payload_realloc(protected, len);
   if (!err) {
     unifex_payload_free_clone(protected);
