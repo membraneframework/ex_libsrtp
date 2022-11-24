@@ -158,7 +158,7 @@ defmodule ExLibSRTP do
   Other errors indicate a failure in cryptographic mechanisms, please refer to [libsrtp documentation](https://github.com/cisco/libsrtp)
   """
   @spec unprotect(t(), protected :: binary(), use_mki :: boolean()) ::
-          {:ok, unprotected :: binary()} | {:error, libsrtp_error_t}
+          {:ok, unprotected :: binary()} | {:error, libsrtp_error_t()}
   def unprotect(ref(native) = _srtp, protected, use_mki \\ false) do
     Native.unprotect(native, :rtp, protected, use_mki)
   end
@@ -174,7 +174,7 @@ defmodule ExLibSRTP do
   Other errors indicate issues in the cryptographic mechanisms.
   """
   @spec unprotect_rtcp(t(), protected :: binary(), use_mki :: boolean()) ::
-          {:ok, unprotected :: binary()} | {:error, libsrtp_error_t}
+          {:ok, unprotected :: binary()} | {:error, libsrtp_error_t()}
   def unprotect_rtcp(ref(native) = _srtp, protected, use_mki \\ false) do
     Native.unprotect(native, :rtcp, protected, use_mki)
   end
