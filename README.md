@@ -11,7 +11,7 @@ Firstly, install [libsrtp]. Then, add `:ex_libsrtp` to your list of dependencies
 ```elixir
 def deps do
   [
-    {:ex_libsrtp, "~> 0.5.1"}
+    {:ex_libsrtp, "~> 0.6.0"}
   ]
 end
 ```
