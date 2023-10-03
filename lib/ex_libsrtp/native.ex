@@ -28,12 +28,12 @@ defmodule ExLibSRTP.Native do
   def marshal_window_size(:default), do: 0
 
   def marshal_window_size(window) when window < 64 do
-    Logger.warn("ExLibSRTP: Window size to small, setting to 64")
+    Logger.warning("ExLibSRTP: Window size to small, setting to 64")
     64
   end
 
   def marshal_window_size(window) when window > 32_768 do
-    Logger.warn("ExLibSRTP: Window size to large, setting to 32768")
+    Logger.warning("ExLibSRTP: Window size to large, setting to 32768")
     32_768
   end
 
