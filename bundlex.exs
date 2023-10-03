@@ -7,6 +7,25 @@ defmodule Membrane.ExLibSRTP.BundlexProject do
     ]
   end
 
+  defp get_srtp_url() do
+    url_prefix =
+      "https://github.com/membraneframework-precompiled/precompiled_libsrtp/releases/latest/download/srtp"
+
+    case Bundlex.get_target() do
+      %{os: "linux"} ->
+        {:precompiled, "#{url_prefix}_linux.tar.gz"}
+
+      %{architecture: "x86_64", os: "darwin" <> _rest_of_os_name} ->
+        {:precompiled, "#{url_prefix}_macos_intel.tar.gz"}
+
+      %{architecture: "aarch64", os: "darwin" <> _rest_of_os_name} ->
+        {:precompiled, "#{url_prefix}_macos_arm.tar.gz"}
+
+      _other ->
+        nil
+    end
+  end
+
   defp natives() do
     [
       srtp: [
@@ -16,7 +35,7 @@ defmodule Membrane.ExLibSRTP.BundlexProject do
           "srtp_util.c",
           "unifex_util.c"
         ],
-        pkg_configs: ["libsrtp2"],
+        os_deps: [{get_srtp_url(), "libsrtp2"}],
         preprocessor: Unifex
       ]
     ]
