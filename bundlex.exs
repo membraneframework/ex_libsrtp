@@ -35,7 +35,7 @@ defmodule Membrane.ExLibSRTP.BundlexProject do
           "srtp_util.c",
           "unifex_util.c"
         ],
-        os_deps: [{get_srtp_url(), "libsrtp2"}],
+        os_deps: [{[get_srtp_url(), :pkg_config], "libsrtp2"}],
         preprocessor: Unifex
       ]
     ]
