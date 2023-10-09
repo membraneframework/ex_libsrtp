@@ -20,6 +20,12 @@ This package is based on [libsrtp](https://github.com/cisco/libsrtp).The precomp
 
 ### Manual instalation of dependencies
 
+#### macOS
+
+```shell
+brew install srtp
+```
+
 #### Ubuntu
 
 ```shell
