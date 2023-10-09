@@ -6,14 +6,36 @@
 
 ## Installation
 
-Firstly, install [libsrtp]. Then, add `:ex_libsrtp` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `:ex_libsrtp` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:ex_libsrtp, "~> 0.6.0"}
+    {:ex_libsrtp, "~> 0.7.0"}
   ]
 end
+```
+
+This package is based on [libsrtp](https://github.com/cisco/libsrtp).The precompiled builds will be pulled and linked automatically. However, should there be any problems, consider installing it manually.
+
+### Manual instalation of dependencies
+
+#### macOS
+
+```shell
+brew install srtp
+```
+
+#### Ubuntu
+
+```shell
+apt install libsrtp2-dev
+```
+
+#### Arch/Manjaro
+
+```shell
+pacman -S libsrtp
 ```
 
 ## Usage
