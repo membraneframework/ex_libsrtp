@@ -40,7 +40,7 @@ defmodule ExLibSRTP.Mixfile do
     [
       {:bunch, "~> 1.6"},
       {:unifex, "~> 1.1"},
-      {:bundlex, "~> 1.2"},
+      {:bundlex, "~> 1.3"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:dialyxir, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, ">= 0.0.0", only: :dev, runtime: false}
