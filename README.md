@@ -11,12 +11,12 @@ The package can be installed by adding `:ex_libsrtp` to your list of dependencie
 ```elixir
 def deps do
   [
-    {:ex_libsrtp, "~> 0.7.1"}
+    {:ex_libsrtp, "~> 0.7.2"}
   ]
 end
 ```
 
-This package is based on [libsrtp](https://github.com/cisco/libsrtp).The precompiled builds will be pulled and linked automatically. However, should there be any problems, consider installing it manually.
+This package is based on [libsrtp](https://github.com/cisco/libsrtp). The precompiled builds will be pulled and linked automatically. However, should there be any problems, consider installing it manually.
 
 ### Manual instalation of dependencies
 
