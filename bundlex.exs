@@ -18,7 +18,8 @@ defmodule Membrane.ExLibSRTP.BundlexProject do
         ],
         os_deps: [
           libsrtp2: [
-            {:precompiled, Membrane.PrecompiledDependencyProvider.get_dependency_url(:srtp)},
+            {:precompiled,
+             Membrane.PrecompiledDependencyProvider.get_dependency_url(:srtp, version: "2.7.0")},
             :pkg_config
           ]
         ],

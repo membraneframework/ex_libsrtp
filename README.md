@@ -11,7 +11,7 @@ The package can be installed by adding `:ex_libsrtp` to your list of dependencie
 ```elixir
 def deps do
   [
-    {:ex_libsrtp, "~> 0.7.2"}
+    {:ex_libsrtp, "~> 0.7.3"}
   ]
 end
 ```
