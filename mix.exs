@@ -1,7 +1,7 @@
 defmodule ExLibSRTP.Mixfile do
   use Mix.Project
 
-  @version "0.7.2"
+  @version "0.7.3"
   @github_url "https://github.com/membraneframework/ex_libsrtp"
 
   def project do
@@ -41,7 +41,7 @@ defmodule ExLibSRTP.Mixfile do
       {:bunch, "~> 1.6"},
       {:unifex, "~> 1.1"},
       {:bundlex, "~> 1.3"},
-      {:membrane_precompiled_dependency_provider, "~> 0.1.0"},
+      {:membrane_precompiled_dependency_provider, "~> 0.2.1"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:dialyxir, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, ">= 0.0.0", only: :dev, runtime: false}
