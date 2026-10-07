@@ -33,6 +33,14 @@ spec update(
        allow_repeat_tx :: bool
      ) :: :ok :: label
 
+spec set_stream_roc(state, ssrc :: unsigned, roc :: unsigned) ::
+       (:ok :: label)
+       | {:error :: label, reason :: atom}
+
+spec get_stream_roc(state, ssrc :: unsigned) ::
+       {:ok :: label, roc :: unsigned}
+       | {:error :: label, reason :: atom}
+
 spec protect(state, what :: atom, payload, use_mki :: bool, mki_index :: unsigned) ::
        {:ok :: label, payload}
        | {:error :: label, reason :: atom}

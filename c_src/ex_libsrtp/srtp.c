@@ -238,6 +238,26 @@ UNIFEX_TERM update(UnifexEnv *env, UnifexState *state, int ssrc_type,
   return update_result_ok(env);
 }
 
+UNIFEX_TERM set_stream_roc(UnifexEnv *env, UnifexState *state, unsigned ssrc,
+                           unsigned roc) {
+  srtp_err_status_t serr = srtp_set_stream_roc(state->session, ssrc, roc);
+  if (serr) {
+    return set_stream_roc_result_error(env, srtp_util_error_to_atom(serr));
+  }
+
+  return set_stream_roc_result_ok(env);
+}
+
+UNIFEX_TERM get_stream_roc(UnifexEnv *env, UnifexState *state, unsigned ssrc) {
+  uint32_t roc = 0;
+  srtp_err_status_t serr = srtp_get_stream_roc(state->session, ssrc, &roc);
+  if (serr) {
+    return get_stream_roc_result_error(env, srtp_util_error_to_atom(serr));
+  }
+
+  return get_stream_roc_result_ok(env, roc);
+}
+
 UNIFEX_TERM protect(UnifexEnv *env, UnifexState *state, char *what,
                     UnifexPayload *payload, int use_mki, unsigned mki_index) {
   int err;
