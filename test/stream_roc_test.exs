@@ -22,7 +22,7 @@ defmodule ExLibSRTP.StreamROCTest do
       srtp = context_with_stream()
       assert {:ok, 0} = ExLibSRTP.get_stream_roc(srtp, @ssrc)
       assert :ok = ExLibSRTP.set_stream_roc(srtp, @ssrc, 5)
-      assert {:ok, _} = ExLibSRTP.protect(srtp, rtp(1000))
+      assert {:ok, _protected} = ExLibSRTP.protect(srtp, rtp(1000))
       assert {:ok, 5} = ExLibSRTP.get_stream_roc(srtp, @ssrc)
     end
 
@@ -68,8 +68,8 @@ defmodule ExLibSRTP.StreamROCTest do
           :ok = ExLibSRTP.set_stream_roc(receiver, @ssrc, roc)
 
           case ExLibSRTP.unprotect(receiver, wrapped_packet) do
-            {:ok, _} -> roc
-            {:error, _} -> nil
+            {:ok, _unprotected} -> roc
+            {:error, _reason} -> nil
           end
         end)
 
