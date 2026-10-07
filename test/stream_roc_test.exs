@@ -21,7 +21,7 @@ defmodule ExLibSRTP.StreamROCTest do
     test "set ROC takes effect on the next processed packet" do
       srtp = context_with_stream()
       assert {:ok, 0} = ExLibSRTP.get_stream_roc(srtp, @ssrc)
-      assert {:ok, @ssrc} = ExLibSRTP.set_stream_roc(srtp, @ssrc, 5)
+      assert :ok = ExLibSRTP.set_stream_roc(srtp, @ssrc, 5)
       assert {:ok, _} = ExLibSRTP.protect(srtp, rtp(1000))
       assert {:ok, 5} = ExLibSRTP.get_stream_roc(srtp, @ssrc)
     end
@@ -35,13 +35,13 @@ defmodule ExLibSRTP.StreamROCTest do
     test "a receiver cannot decrypt a ROC-1 sender until it adopts the ROC" do
       sender = context_with_stream()
       # Outbound index ROC=1, seq=1000.
-      assert {:ok, @ssrc} = ExLibSRTP.set_stream_roc(sender, @ssrc, 1)
+      assert :ok = ExLibSRTP.set_stream_roc(sender, @ssrc, 1)
       packet = rtp(1000)
       assert {:ok, protected} = ExLibSRTP.protect(sender, packet)
 
       receiver = context_with_stream()
       assert {:error, :auth_fail} = ExLibSRTP.unprotect(receiver, protected)
-      assert {:ok, @ssrc} = ExLibSRTP.set_stream_roc(receiver, @ssrc, 1)
+      assert :ok = ExLibSRTP.set_stream_roc(receiver, @ssrc, 1)
       assert {:ok, ^packet} = ExLibSRTP.unprotect(receiver, protected)
     end
   end
@@ -65,7 +65,7 @@ defmodule ExLibSRTP.StreamROCTest do
 
       scan =
         Enum.find_value(0..2, fn roc ->
-          {:ok, @ssrc} = ExLibSRTP.set_stream_roc(receiver, @ssrc, roc)
+          :ok = ExLibSRTP.set_stream_roc(receiver, @ssrc, roc)
 
           case ExLibSRTP.unprotect(receiver, wrapped_packet) do
             {:ok, _} -> roc

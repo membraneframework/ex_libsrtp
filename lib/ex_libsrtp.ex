@@ -8,7 +8,6 @@ defmodule ExLibSRTP do
   - protect or unprotect packets with `protect/3`, `unprotect/3`, `protect_rtcp/3`, `unprotect_rtcp/3`
   - remove streams with `remove_stream/2`
   """
-  require Record
 
   alias ExLibSRTP.{Native, Policy}
 
@@ -113,8 +112,7 @@ defmodule ExLibSRTP do
   end
 
   @doc """
-  Set the roll-over counter (ROC) of an existing stream, returning the echoed
-  `ssrc` which was set.
+  Set the roll-over counter (ROC) of an existing stream.
 
   The stream must be added first with an `:ssrc`-specific policy.
 
@@ -122,7 +120,7 @@ defmodule ExLibSRTP do
   - `:bad_param` - no stream exists for `ssrc`.
   """
   @spec set_stream_roc(t(), ssrc :: ssrc_t(), roc :: roc_t()) ::
-          {:ok, ssrc :: ssrc_t()} | {:error, libsrtp_error_t()}
+          :ok | {:error, libsrtp_error_t()}
   def set_stream_roc(ref(native) = _srtp, ssrc, roc) when is_ssrc(ssrc) and is_roc(roc) do
     Native.set_stream_roc(native, ssrc, roc)
   end

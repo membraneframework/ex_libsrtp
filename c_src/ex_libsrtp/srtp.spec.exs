@@ -34,7 +34,7 @@ spec update(
      ) :: :ok :: label
 
 spec set_stream_roc(state, ssrc :: unsigned, roc :: unsigned) ::
-       {:ok :: label, ssrc :: unsigned}
+       (:ok :: label)
        | {:error :: label, reason :: atom}
 
 spec get_stream_roc(state, ssrc :: unsigned) ::

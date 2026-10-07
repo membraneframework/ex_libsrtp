@@ -245,7 +245,7 @@ UNIFEX_TERM set_stream_roc(UnifexEnv *env, UnifexState *state, unsigned ssrc,
     return set_stream_roc_result_error(env, srtp_util_error_to_atom(serr));
   }
 
-  return set_stream_roc_result_ok(env, ssrc);
+  return set_stream_roc_result_ok(env);
 }
 
 UNIFEX_TERM get_stream_roc(UnifexEnv *env, UnifexState *state, unsigned ssrc) {
